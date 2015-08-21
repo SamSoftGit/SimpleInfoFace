@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">SimpleInfoFace</string>
+
+    <string name="titulo">Sobre SamSoft y este proyecto</string>
+    <string name="cuerpo_1">
+        \n
+        SOBRE SAMSOFT:\n\nSamsoft es una empresa joven dedicada al asesoramiento tecnológico para las personas de a pie,
+        es como tu corredor de seguros pero aplicado a la tecnología, ¿cuantas veces compas cosas sin saber
+        que significan la mitad de las características del producto en el que nos estamos gastando
+        un dineral (moviles, televisores, ordenadores, servidores web, páginas web, etc), SamSoft quiere dar solución a esto,
+        contandote que te interesa según tus necesidades.
+        \n\n
+        Además en SamSoft desarrollamos web (WordPress, PrestaShop, Responsitive, etc), apps para Android,
+        Android wear, juegos 2D en Unity y diseño gráfico.
+        \n\n
+        Contacta con nosotros en contacto@samsoft.es para preguntarnos lo que quieras.
+    </string>
+    <string name="cuerpo_2">
+        \nSOBRE SIMPLE INFO FACE:
+        \n\nEsta caratula de reloj se ha desarrollado con el proposito de crear un tutorial en nuestro Blog (samsoft.es/Blog)
+        sobre como podemos crear una watch face para Android Wear. La idea surge al ver la poquita información que tenemos
+        en castellano de android wear.
+        \n\nTodo el código fuente lo puedes encontrar en GitHub https/:githubXXXXXXXXXXXXXXXXXX y se distribuye con licencia
+        Apache 2.0 (software libre), para ver una copia de la licencia puedes ir a la siguiente dirección:
+        \n\nhttp://www.apache.org/licenses/LICENSE-2.0.html\n\nLas dudas sobre el reloj y su funcionamiento se atenderán en el blog.
+    </string>
+    <string name="companion_app">Simple Info Face</string>
+</resources>
