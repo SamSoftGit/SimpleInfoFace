@@ -428,7 +428,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             //calculamos el casillero que va a contener a la fecha
             casillero=new RectF(
                     offsetXTextoFecha - paddingFecha,
-                    offsetYTextoFecha + paddingFecha ,
+                    offsetYTextoFecha + paddingFecha,
                     offsetXTextoFecha + casilleroWidth + paddingFecha,
                     offsetYTextoFecha + casilleroHeigth + paddingFecha
             );
@@ -459,13 +459,11 @@ public class ServicioMain extends CanvasWatchFaceService {
             //angulo de la porcion de cada segudno
             float asec = seconds / 60f * TWO_PI;
             //minutos
-            //float minutes = mCalendar.get(Calendar.MINUTE) + seconds / 60f;
-            float minutes=20f;
+            float minutes = mCalendar.get(Calendar.MINUTE) + seconds / 60f;
             //angulo de la porcion de cada minuto
             float amin = minutes / 60f * TWO_PI;
             //horas
-            //float hours = mCalendar.get(Calendar.HOUR) + minutes / 60f;
-            float hours=12F;
+            float hours = mCalendar.get(Calendar.HOUR) + minutes / 60f;
             //angulo de la porcion de cada minuto
             float ahrs = hours / 12f * TWO_PI;
 

@@ -4,49 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".AboutActivity">
-
-    <TextView
-        android:id="@+id/titulo"
-        android:text="@string/titulo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/tam_texto_titulo"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"
-        />
-    <TextView
-        android:id="@+id/cuerpo1"
-        android:text="@string/cuerpo_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/tam_texto_cuerpo"
-        android:layout_below="@+id/titulo"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="@dimen/margin_top_cuerpo"
-        android:textColor="@android:color/holo_blue_dark"
-        />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/titulo"
+            android:text="@string/titulo"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/tam_texto_titulo"
+            android:layout_marginTop="@dimen/margin_top_cuerpo"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cabecera"
+            android:src="@drawable/companion_cabecera"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/cabecera_description" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".AboutActivity">
+            <TextView
+                android:id="@+id/cuerpo1"
+                android:text="@string/cuerpo_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/tam_texto_cuerpo"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/margin_top_cuerpo"
+                android:textColor="@android:color/holo_blue_dark"
+                />
 
-    <TextView
-        android:id="@+id/cuerpo2"
-        android:text="@string/cuerpo_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="@dimen/tam_texto_cuerpo"
-        android:layout_below="@+id/cuerpo1"
-        android:layout_marginTop="@dimen/margin_top_cuerpo"
-        android:textColor="@android:color/holo_blue_dark"
-        />
+            <TextView
+                android:id="@+id/cuerpo2"
+                android:text="@string/cuerpo_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/tam_texto_cuerpo"
+                android:layout_below="@+id/cuerpo1"
+                android:layout_marginTop="@dimen/margin_top_cuerpo"
+                android:textColor="@android:color/holo_blue_dark"
+                />
 
-</RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </ScrollView>
