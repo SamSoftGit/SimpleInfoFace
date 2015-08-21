@@ -332,9 +332,17 @@ public class ServicioMain extends CanvasWatchFaceService {
             wtextoBat=pincelInfoBat.measureText(String.valueOf(level)+"%");
             htextoBat=pincelInfoBat.ascent()+pincelCyanSolido.descent();
 
-            if(heightA>=320){
-                pincelCyanSolido.setTextSize(13f);
-                pincelBlancoSolido.setTextSize(13f);
+            if(heightA>=320f){
+
+                if(heightA==320f){
+                    pincelCyanSolido.setTextSize(13f);
+                    pincelBlancoSolido.setTextSize(13f);
+                }
+                else{
+                    pincelCyanSolido.setTextSize(16f);
+                    pincelBlancoSolido.setTextSize(16f);
+                }
+
                 //vamos a pintar dos casilleros, uno de ellos para indicar el nivel de bateria
                 casilleroBateria=new RectF(
                         (centerX/2)-30,
@@ -451,11 +459,13 @@ public class ServicioMain extends CanvasWatchFaceService {
             //angulo de la porcion de cada segudno
             float asec = seconds / 60f * TWO_PI;
             //minutos
-            float minutes = mCalendar.get(Calendar.MINUTE) + seconds / 60f;
+            //float minutes = mCalendar.get(Calendar.MINUTE) + seconds / 60f;
+            float minutes=20f;
             //angulo de la porcion de cada minuto
             float amin = minutes / 60f * TWO_PI;
             //horas
-            float hours = mCalendar.get(Calendar.HOUR) + minutes / 60f;
+            //float hours = mCalendar.get(Calendar.HOUR) + minutes / 60f;
+            float hours=12F;
             //angulo de la porcion de cada minuto
             float ahrs = hours / 12f * TWO_PI;
 

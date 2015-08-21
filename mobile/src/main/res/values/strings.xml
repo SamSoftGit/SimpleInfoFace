@@ -20,7 +20,7 @@
         \n\nEsta caratula de reloj se ha desarrollado con el proposito de crear un tutorial en nuestro Blog (samsoft.es/Blog)
         sobre como podemos crear una watch face para Android Wear. La idea surge al ver la poquita información que tenemos
         en castellano de android wear.
-        \n\nTodo el código fuente lo puedes encontrar en GitHub https/:githubXXXXXXXXXXXXXXXXXX y se distribuye con licencia
+        \n\nTodo el código fuente lo puedes encontrar en GitHub https://github.com/SamSoftGit/SimpleInfoFace y se distribuye con licencia
         Apache 2.0 (software libre), para ver una copia de la licencia puedes ir a la siguiente dirección:
         \n\nhttp://www.apache.org/licenses/LICENSE-2.0.html\n\nLas dudas sobre el reloj y su funcionamiento se atenderán en el blog.
     </string>
