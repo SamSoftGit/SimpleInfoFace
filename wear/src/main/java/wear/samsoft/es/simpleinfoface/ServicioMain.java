@@ -677,8 +677,6 @@ public class ServicioMain extends CanvasWatchFaceService {
                 mMinutePaint.setAntiAlias(false);
             }
             else{
-
-
                 //si es modo interactivo damos de nuevo el antialias y el color a la manecilla
                 if(!esRegistradoBat) {
                     //registramos el broadcast de la bateria
