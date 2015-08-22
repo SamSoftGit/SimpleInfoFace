@@ -64,11 +64,11 @@ public class ServicioMain extends CanvasWatchFaceService {
      * necesarias en los elementos ui
      */
     private class Engine extends CanvasWatchFaceService.Engine {
-        //El id de mensaje para el manejador de la actualizacion de los segundos
+        //El id de mensaje para el Handler de la actualizacion de los segundos
         static final int MSG_UPDATE_TIME = 0;
 
         /**
-         * hilo que monta un Handler para actualizar el modo interactivo.
+         * hilo que tiene un Handler para actualizar el tiempo en modo interactivo.
          */
         final ThreadLocal<Handler> mUpdateTimeHandler = new ThreadLocal<Handler>() {
             @Override
@@ -95,7 +95,8 @@ public class ServicioMain extends CanvasWatchFaceService {
         };
 
         /**
-         * Metodo que inicia la actualizacion de los segundos si estamos en modo interactivo
+         * Metodo que inicia la actualizacion de los segundos si estamos en modo interactivo y es
+         * visible
          */
         private void updateTimer() {
             mUpdateTimeHandler.get().removeMessages(MSG_UPDATE_TIME);
@@ -107,7 +108,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         //la hora local
         Calendar mCalendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZone.getDefault().getID()));
 
-        //control de los broadcast
+        //variable de control de los broadcast
         boolean mRegisteredTimeZoneReceiver = false;
 
         /**
@@ -126,7 +127,6 @@ public class ServicioMain extends CanvasWatchFaceService {
         final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 level= intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             }
         };
@@ -136,9 +136,9 @@ public class ServicioMain extends CanvasWatchFaceService {
 
         // Constantes para control son los radiantes
         final float TWO_PI = (float) Math.PI * 2f;//2f es la circunferencia entera
-        final float PI = (float) Math.PI;
+        final float PI = (float) Math.PI;//media circunferencia
 
-        //pinceles
+        //pinceles para dar formato a lo que pintaremos
         Paint mBackgroundPaint=new Paint();
         Paint pincelAzulBlur = new Paint();
         Paint mMinutePaint = new Paint();
@@ -151,25 +151,23 @@ public class ServicioMain extends CanvasWatchFaceService {
         Paint pincelMarcoBat=new Paint();
         Paint pincelInfoBat=new Paint();
 
-
-        //indicador Ambient mode
+        //indicador Ambient mode se actualiza en el metodo onAmbientModeChange
         boolean mAmbient;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
 
-            //Seteamos el estilo de la caratula como los modos de tarjetas y si queremos mostrar
+            //Preparamos el estilo de la caratula como los modos de tarjetas y si queremos mostrar
             //la hora del sistema
             setWatchFaceStyle(new WatchFaceStyle.Builder(ServicioMain.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
                     .setShowSystemUiTime(false)
                     .build());
+
             //seteamos la zona horaria
             mCalendar.setTimeZone(TimeZone.getDefault());
-
-
 
             //preparamos el fondo, en este caso no tiene imagen y el fondo es de color negro
             mBackgroundPaint = new Paint();
@@ -246,6 +244,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         }
 
         //variables que utilizaremos para pintar en el canvas
+
         //los centros
         float centerX;
         float centerY;
@@ -308,7 +307,6 @@ public class ServicioMain extends CanvasWatchFaceService {
         public void onSurfaceChanged(SurfaceHolder holder, int format, int widthA, int heightA) {
             super.onSurfaceChanged(holder, format, widthA, heightA);
 
-
             //tomamos la hora
             mCalendar.setTimeInMillis(System.currentTimeMillis());
 
@@ -320,6 +318,10 @@ public class ServicioMain extends CanvasWatchFaceService {
             centerX = width / 2f;
             centerY = height / 2f;
 
+            //longitud manecillas
+            longMin = centerX - 40f;
+            longHrs = centerX - 80f;
+
             //calculamos el angulo que tomaremos para cada segundo
             pathEffectLen = (PI * width) / 60f;
             //creamos los efectos para el casillero de los segundos
@@ -328,19 +330,22 @@ public class ServicioMain extends CanvasWatchFaceService {
                     0f);
             pincelAzulBlur.setPathEffect(dashPathEffect);
 
-            //obtenemos las longitudes de la bateria
+            //obtenemos las longitudes del texto de la bateria
             wtextoBat=pincelInfoBat.measureText(String.valueOf(level)+"%");
             htextoBat=pincelInfoBat.ascent()+pincelCyanSolido.descent();
 
+            //dependiendo de la resolución de la pantalla pintaremos de una forma u otra ciertos
+            //elementos
             if(heightA>=320f){
 
+                //tamanios de los textos
                 if(heightA==320f){
                     pincelCyanSolido.setTextSize(13f);
                     pincelBlancoSolido.setTextSize(13f);
                 }
                 else{
-                    pincelCyanSolido.setTextSize(16f);
-                    pincelBlancoSolido.setTextSize(16f);
+                    pincelCyanSolido.setTextSize(15f);
+                    pincelBlancoSolido.setTextSize(15f);
                 }
 
                 //vamos a pintar dos casilleros, uno de ellos para indicar el nivel de bateria
@@ -359,10 +364,11 @@ public class ServicioMain extends CanvasWatchFaceService {
                         centerY+10
                 );
 
+                //posiciones del texto de la bateria
                 xTextoBat=(centerX/2)-(wtextoBat/2);
                 yTextoBat=(centerY-30)-(htextoBat/2);
 
-                //construimos la fecha
+                //construimos la fecha, en dispositivos grandes tendra el anio
                 fechaBlanca = mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.ENGLISH)
                         + " " +
                         String.valueOf(Calendar.DAY_OF_MONTH)
@@ -372,8 +378,10 @@ public class ServicioMain extends CanvasWatchFaceService {
                         String.valueOf(mCalendar.get(Calendar.YEAR));
             }
             else{
+                //tamanio de los textos en pequenio
                 pincelCyanSolido.setTextSize(12f);
                 pincelBlancoSolido.setTextSize(12f);
+
                 //vamos a pintar dos casilleros, uno de ellos para indicar el nivel de bateria
                 casilleroBateria=new RectF(
                         (centerX/2)-20,
@@ -390,10 +398,11 @@ public class ServicioMain extends CanvasWatchFaceService {
                         centerY+10
                 );
 
+                //posiciones del texto de la bateria
                 xTextoBat=(centerX/2)-(wtextoBat/2);
                 yTextoBat=(centerY-20)-(htextoBat/2);
 
-                //construimos la fecha
+                //construimos la fecha, en dispositivos pequenios NO tendra el anio
                 fechaBlanca = mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.ENGLISH)
                         + " " +
                         String.valueOf(Calendar.DAY_OF_MONTH)
@@ -401,7 +410,7 @@ public class ServicioMain extends CanvasWatchFaceService {
                 fechaCyan = mCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ENGLISH);
             }
 
-            //creamos el shader para aplicarselo
+            //creamos el shader que sera un gradiente para el casillero de la fecha
             shaderBat = new LinearGradient(
                     casilleroBateria.left-20,
                     casilleroBateria.top,
@@ -415,7 +424,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             finBat = (180 * abat) / PI;
 
             //calculamos los offsets de la fecha que esta dividida en dos para poder pintarlas en
-            //dos colores
+            //dos colores, cyan y blanco
             offsetXTextoFecha = centerX + centerX/4;
             offsetYTextoFecha = centerY - centerY/6;
             offsetXTextoFechaCyan = offsetXTextoFecha + pincelBlancoSolido.measureText(fechaBlanca);
@@ -443,30 +452,31 @@ public class ServicioMain extends CanvasWatchFaceService {
 
         }
 
-
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
-            //pintamos el fondo, en este caso un color negro
+            //pintamos el fondo, en este caso es el color negro sin imagen
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 
             // Actualizamos el tiempo
             mCalendar.setTimeInMillis(System.currentTimeMillis());
 
             // Calculos de los angulos en radianes para mover los segundos, minutos y horas.
+
             //segundos
             float seconds = mCalendar.get(Calendar.SECOND) +
                     mCalendar.get(Calendar.MILLISECOND) / 1000f;
             //angulo de la porcion de cada segudno
             float asec = seconds / 60f * TWO_PI;
+
             //minutos
             float minutes = mCalendar.get(Calendar.MINUTE) + seconds / 60f;
             //angulo de la porcion de cada minuto
             float amin = minutes / 60f * TWO_PI;
+
             //horas
             float hours = mCalendar.get(Calendar.HOUR) + minutes / 60f;
             //angulo de la porcion de cada minuto
             float ahrs = hours / 12f * TWO_PI;
-
 
             // solo pintaremos cierta informacion si estamos en modo interactivo
             // para respetar al maximo la bateria
@@ -474,7 +484,7 @@ public class ServicioMain extends CanvasWatchFaceService {
 
                 for (int i = 1; i <= 12; i++) {
                     //pintamos los iindicadores de la hora, pero no aconsejo pintar esto aqui,
-                    // si no ponerun fondo con las marcas de las horas ya puestas
+                    //si no poner un fondo con las marcas de las horas ya pintadas en el
                     //ya que así no cargamos el proceso de pintado con bucles
 
                     ahrsAux = i / 12f * TWO_PI;
@@ -492,12 +502,11 @@ public class ServicioMain extends CanvasWatchFaceService {
                     );
                 }
 
-
-                //preparamos to do lo necesario para para pintar los segundos
+                //preparamos to_do lo necesario para para pintar los segundos
                 final RectF ovalSec = new RectF();
                 //calculamos el angulo de fin del arco
                 float finSec = (180f * asec) / PI;
-                //longitud del cuadrado
+                //longitud del cuadrado que represntara cada segundo
                 float longSegundos=20f;
                 //le damos medidas a la base del arco
                 ovalSec.set(
@@ -506,9 +515,8 @@ public class ServicioMain extends CanvasWatchFaceService {
                         bounds.right - longSegundos,
                         bounds.bottom - longSegundos
                 );
-                //pintamos eel arco desde -90 que es desde las 12 en adelante, no pintamos centro
+                //pintamos el arco desde -90 que es desde las 12 en punto, no pintamos centro
                 canvas.drawArc(ovalSec, -90f, finSec, false, pincelAzulBlur);
-
 
                 //pintamos los dos trozos de la fecha por separado para poder cambiar su color
                 canvas.drawText(fechaBlanca, offsetXTextoFecha,
@@ -517,37 +525,39 @@ public class ServicioMain extends CanvasWatchFaceService {
                 canvas.drawText(fechaCyan, offsetXTextoFechaCyan,
                         offsetYTextoFecha, pincelCyanSolido);
 
-
                 //pintamos el casillero de la fecha
                 canvas.drawRect(casillero, pincelCasilleroFecha);
 
-                //si hemos obtenido lectura de la bateria la mostraremos
+                //tomamos los angulos de la bateria
+                abat = level / 100f * TWO_PI;
+                finBat = (180f * abat) / PI;
+
+                //pintamos el marco de la bateria
+                canvas.drawArc(casilleroBateriaPadre,
+                        0f, 360f,
+                        false,
+                        pincelMarcoBat
+                );
+
                 if (level!=-1){
-
-                    //tomamos los angulos de la bateria
-                    abat = level / 100f * TWO_PI;
-                    finBat = (180f * abat) / PI;
-
-                    //pintamos el marco de la bateria
-                    canvas.drawArc(casilleroBateriaPadre,
-                            0f,360f,
-                            false,
-                            pincelMarcoBat
-                    );
+                    //si hemos obtenido lectura de la bateria la mostraremos
                     //pintamos el nivel bateria
                     canvas.drawArc(casilleroBateria,
                             -90f,finBat,
                             false,
                             pincelCasilleroBateria
                     );
-                    //pintamos el texto que va dentro
+                    //pintamos el texto
                     canvas.drawText(String.valueOf(level)+"%",xTextoBat,yTextoBat, pincelInfoBat);
 
                 }
-            }
+                else{
+                    //si no pintaremos solo el texto
+                    canvas.drawText("0%",xTextoBat,yTextoBat, pincelInfoBat);
+                }
 
-            longMin = centerX - 40f;
-            longHrs = centerX - 80f;
+
+            }
 
             // Pintamos las manecillas de las horas y los minutos.
             float minX = (float) Math.sin(amin) * longMin;
@@ -581,7 +591,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             //Si es visible
             if (visible) {
                 registerReceiver();
-                // Update time zone in case it changed while we weren't visible.
+                // Actualizamos el tiempo
                 mCalendar.setTimeInMillis(System.currentTimeMillis());
                 if(!esRegistradoBat) {
                     //registramos el broadcast de la bateria
@@ -591,18 +601,22 @@ public class ServicioMain extends CanvasWatchFaceService {
                 }
 
             } else {
+                //si no desregistramos todos los broadcast
                 unregisterReceiver();
                 if(esRegistradoBat) {
                     ServicioMain.this.unregisterReceiver(mBatteryReceiver);
                     esRegistradoBat = false;
                 }
             }
-            //El reloj depende de si es visible o esta en ambient mode, por lo que tenemos que
-            //controlar el inicio y la parada del reloj
+            //controlamos la actualizacion de los segundos
             updateTimer();
         }
 
+        /**
+         * metodo que regustra el receiver si este no lo esta ya
+         */
         private void registerReceiver() {
+
             if (mRegisteredTimeZoneReceiver ) {
                 return;
             }
@@ -611,6 +625,9 @@ public class ServicioMain extends CanvasWatchFaceService {
             ServicioMain.this.registerReceiver(mTimeZoneReceiver, filterCambioZonaHoraria);
         }
 
+        /**
+         * metodo que desregistra el reciever si este no lo esta ya
+         */
         private void unregisterReceiver() {
             if (!mRegisteredTimeZoneReceiver ) {
                 return;
@@ -638,6 +655,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             invalidate();
         }
 
+        //control del broadcast de la bateria
         boolean esRegistradoBat=false;
 
         @Override
@@ -645,7 +663,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             super.onAmbientModeChanged(inAmbientMode);
             //tomamos el valor para saber si estamos en modo ambiente
             mAmbient = inAmbientMode;
-            //si es ambient quitaremos el color de la manecilla y el
+            //si es ambient quitaremos el color cyan y lo cambiamos por gris y el
             //antialias como sugiere google
             if (mAmbient) {
 
@@ -659,6 +677,7 @@ public class ServicioMain extends CanvasWatchFaceService {
                 mMinutePaint.setAntiAlias(false);
             }
             else{
+                //si es modo interactivo damos de nuevo el antialias y el color a la manecilla
                 if(!esRegistradoBat) {
                     //registramos el broadcast de la bateria
                     IntentFilter filterCambioDeBateria = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -671,8 +690,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             }
             //repintamos
             invalidate();
-            //El reloj depende de si es visible o esta en ambient mode, por lo que tenemos que
-            //controlar el inicio y la parada del reloj
+            //comprobamos si debemos seguir actualizando los segundos
             updateTimer();
         }
 
