@@ -677,7 +677,7 @@ public class ServicioMain extends CanvasWatchFaceService {
                 mMinutePaint.setAntiAlias(false);
             }
             else{
-                int i=0;
+
 
                 //si es modo interactivo damos de nuevo el antialias y el color a la manecilla
                 if(!esRegistradoBat) {
