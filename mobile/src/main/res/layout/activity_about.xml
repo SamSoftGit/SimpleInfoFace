@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/tam_texto_titulo"
-            android:layout_marginTop="@dimen/margin_top_cuerpo"
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white"
             />
@@ -36,7 +35,7 @@
             android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".AboutActivity">
             <TextView
                 android:id="@+id/cuerpo1"
-                android:text="@string/cuerpo_1"
+                android:text="@string/cuerpo_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/tam_texto_cuerpo"
@@ -49,7 +48,7 @@
 
             <TextView
                 android:id="@+id/cuerpo2"
-                android:text="@string/cuerpo_2"
+                android:text="@string/cuerpo_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
