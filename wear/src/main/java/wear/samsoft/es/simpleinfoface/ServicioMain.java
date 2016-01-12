@@ -13,6 +13,10 @@
  limitations under the License.
  **/
 
+/**
+ * Este codigo se explica en un tutorial en nuestro blog, visitanos
+ * para saber mas en www.samsoft.es/Blog
+ */
 
 package wear.samsoft.es.simpleinfoface;
 
@@ -43,7 +47,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Clase encargada de manejar el servicio del reloj
+ * Clase encargada de manejar el servicio del reloj tiene que extender de CanvasWatchFaceService
  */
 public class ServicioMain extends CanvasWatchFaceService {
 
@@ -68,7 +72,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         static final int MSG_UPDATE_TIME = 0;
 
         /**
-         * hilo que tiene un Handler para actualizar el tiempo en modo interactivo.
+         * hilo que contiene un Handler para actualizar el tiempo en modo interactivo.
          */
         final ThreadLocal<Handler> mUpdateTimeHandler = new ThreadLocal<Handler>() {
             @Override
@@ -78,7 +82,7 @@ public class ServicioMain extends CanvasWatchFaceService {
                     public void handleMessage(Message message) {
                         switch (message.what) {
                             case MSG_UPDATE_TIME:
-                                //refrescamos para que repinte
+                                //invalidamos el canvas para que repinte
                                 invalidate();
                                 //preguntamos si estamos en modo interactivo
                                 if (isVisible() && !isInAmbientMode()) {
@@ -108,7 +112,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         //la hora local
         Calendar mCalendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZone.getDefault().getID()));
 
-        //variable de control de los broadcast
+        //variable de control de los broadcast del cambio de zona horari
         boolean mRegisteredTimeZoneReceiver = false;
 
         /**
@@ -122,7 +126,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         };
 
         /**
-         * broadcast para leer el nivel de bateria
+         * broadcast para leer el nivel de bateria del reloj
          */
         final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
             @Override
@@ -138,7 +142,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         final float TWO_PI = (float) Math.PI * 2f;//2f es la circunferencia entera
         final float PI = (float) Math.PI;//media circunferencia
 
-        //pinceles para dar formato a lo que pintaremos
+        //pinceles para dar formato a lo que pintaremos, fondos lineas, letras, etc
         Paint mBackgroundPaint=new Paint();
         Paint pincelAzulBlur = new Paint();
         Paint mMinutePaint = new Paint();
@@ -245,10 +249,10 @@ public class ServicioMain extends CanvasWatchFaceService {
 
         //variables que utilizaremos para pintar en el canvas
 
-        //los centros
+        //los centros del canvas
         float centerX;
         float centerY;
-        //el tamaño
+        //el tamaño del canvas
         int width;
         int height;
         //este parametro se usa para determinar las direcciones del efecto
@@ -314,7 +318,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             width = widthA;
             height = heightA;
 
-            //tomamos el centro de la circunferencia
+            //tomamos el centro del canvas
             centerX = width / 2f;
             centerY = height / 2f;
 
@@ -429,7 +433,7 @@ public class ServicioMain extends CanvasWatchFaceService {
             offsetYTextoFecha = centerY - centerY/6;
             offsetXTextoFechaCyan = offsetXTextoFecha + pincelBlancoSolido.measureText(fechaBlanca);
 
-            //toammos las medidas
+            //tomamos las medidas ya con las dos fechas juntas y poder saber cuanto ocupan
             casilleroWidth = pincelBlancoSolido.measureText(fechaBlanca)+
                     pincelCyanSolido.measureText(fechaCyan);
             casilleroHeigth = pincelBlancoSolido.ascent()-pincelBlancoSolido.descent();
@@ -442,16 +446,22 @@ public class ServicioMain extends CanvasWatchFaceService {
                     offsetYTextoFecha + casilleroHeigth + paddingFecha
             );
 
-            //creamos el shader para aplicarselo
+            //creamos el shader para aplicarselo en este caso un gradiente lineal
             shader = new LinearGradient(casillero.left,casillero.top,
                     casillero.right,casillero.bottom,
                     Color.CYAN,Color.WHITE, Shader.TileMode.MIRROR);
 
-            //seteamos el shader
+            //seteamos el shader al piincel
             pincelCasilleroFecha.setShader(shader);
 
         }
 
+        /**
+         * Este metodo se encarga de pintar el lienzo cada x veces por segundo
+         * aqui realizaremos las operaciones de pintado por pantalla unicamente
+         * @param canvas
+         * @param bounds
+         */
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             //pintamos el fondo, en este caso es el color negro sin imagen
@@ -541,13 +551,13 @@ public class ServicioMain extends CanvasWatchFaceService {
 
                 if (level!=-1){
                     //si hemos obtenido lectura de la bateria la mostraremos
-                    //pintamos el nivel bateria
+                    //pintamos el nivel bateria en forma de arco
                     canvas.drawArc(casilleroBateria,
                             -90f,finBat,
                             false,
                             pincelCasilleroBateria
                     );
-                    //pintamos el texto
+                    //pintamos el texto dentro del arco
                     canvas.drawText(String.valueOf(level)+"%",xTextoBat,yTextoBat, pincelInfoBat);
 
                 }
@@ -577,14 +587,18 @@ public class ServicioMain extends CanvasWatchFaceService {
             //deshabilitamos el handler para que deje de actualizar
             mUpdateTimeHandler.get().removeMessages(MSG_UPDATE_TIME);
             if(esRegistradoBat) {
-                //desregistramos
+                //desregistramos el receiver de la bateria
                 ServicioMain.this.unregisterReceiver(mBatteryReceiver);
                 esRegistradoBat = false;
             }
             super.onDestroy();
         }
 
-
+        /**
+         * este metodo se invoca cada vez que cambia la visibilidad de la caratula
+         * es decir si cambiamos entre visible o no
+         * @param visible
+         */
         @Override
         public void onVisibilityChanged(boolean visible) {
             super.onVisibilityChanged(visible);
@@ -626,7 +640,7 @@ public class ServicioMain extends CanvasWatchFaceService {
         }
 
         /**
-         * metodo que desregistra el reciever si este no lo esta ya
+         * metodo que desregistra el reciever de la zona horaria si este no lo esta ya
          */
         private void unregisterReceiver() {
             if (!mRegisteredTimeZoneReceiver ) {
@@ -643,7 +657,8 @@ public class ServicioMain extends CanvasWatchFaceService {
             //aqui cambiariamos los tamaños y posiciones si hiciera falta
             //dependiendo de si es redondo o cuadrado
             //en este caso nosotros nos hemos centrado en las resoluciones
-            //y pintar igual todos los relojes
+            //y pintar igual todos los relojes indiferentemente de si es
+            //cuadrado o no
 
         }
 
@@ -658,6 +673,10 @@ public class ServicioMain extends CanvasWatchFaceService {
         //control del broadcast de la bateria
         boolean esRegistradoBat=false;
 
+        /**
+         * este metodo es llamado cuando pasamos entre el modo ambiente o el interactivo
+         * @param inAmbientMode
+         */
         @Override
         public void onAmbientModeChanged(boolean inAmbientMode) {
             super.onAmbientModeChanged(inAmbientMode);
@@ -668,7 +687,8 @@ public class ServicioMain extends CanvasWatchFaceService {
             if (mAmbient) {
 
                 if(esRegistradoBat) {
-                    //desregistramos el broadcast  si procede
+                    //desregistramos el broadcast  si procede ya que la bateria no se muestra en
+                    //modo ambiente
                     ServicioMain.this.unregisterReceiver(mBatteryReceiver);
                     esRegistradoBat = false;
                 }
