@@ -20,10 +20,13 @@ limitations under the License.
  */
 package wear.samsoft.es.simpleinfoface;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
@@ -39,4 +42,10 @@ public class AboutActivity extends AppCompatActivity {
     }
 
 
+    public void onClickLegal(View view) {
+        String url = "http://samsoft.es/Blog/condicioneslegales/";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
 }
