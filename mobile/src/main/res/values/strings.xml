@@ -8,11 +8,11 @@
         joven e innovador de diseñadores y desarrolladores, nuestra máxima es la de la calidad y la cercanía con los usuarios de nuestras apps,
          nosotros no solo pretendemos dar un producto, queremos que participes en los desarrollos y mejoras de nuestras apps para poder ofrecerte
         siempre el mejor producto posible.
-
     </string>
     <string name="cuerpo_2">
         \nSOBRE SIMPLE INFO FACE:
-        \n\nEsta carátula de reloj se ha desarrollado con el propósito de crear un tutorial en nuestro Blog (samsoft.es/Blog)
+        \n\nEsta carátula de reloj se ha desarrollado con el propósito de crear un tutorial en nuestro Blog (www.samsoft.es/Blog,
+        si pulsas encima de este texto iras directo al tutorial en el blog)
         sobre como podemos crear una watch face para Android Wear. La idea surge al ver la poca información que tenemos
         en castellano de android wear.
         \n\nTodo el código fuente lo puedes encontrar en GitHub https://github.com/SamSoftGit/SimpleInfoFace y se distribuye con licencia
